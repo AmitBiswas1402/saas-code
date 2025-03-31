@@ -1,15 +1,15 @@
 "use client";
-
-import useMounted from "@/hooks/useMounted";
 import { useCodeEditorStore } from "@/store/useCodeEditorStore";
-import { useClerk } from "@clerk/nextjs";
-import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { defineMonacoThemes, LANGUAGE_CONFIG } from "../_constants";
+import { Editor } from "@monaco-editor/react";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { RotateCcwIcon, ShareIcon, TypeIcon } from "lucide-react";
-import { Editor } from "@monaco-editor/react";
+import { useClerk } from "@clerk/nextjs";
 import { EditorPanelSkeleton } from "./EditorPanelSkeleton";
+import useMounted from "@/hooks/useMounted";
+import ShareSnippetDialog from "./ShareSnippetDialog";
 
 function EditorPanel() {
   const clerk = useClerk();
@@ -69,7 +69,6 @@ function EditorPanel() {
               </p>
             </div>
           </div>
-
           <div className="flex items-center gap-3">
             {/* Font Size Slider */}
             <div className="flex items-center gap-3 px-3 py-2 bg-[#1e1e2e] rounded-lg ring-1 ring-white/5">
@@ -115,7 +114,7 @@ function EditorPanel() {
           </div>
         </div>
 
-        {/* Editor */}
+        {/* Editor  */}
         <div className="relative group rounded-xl overflow-hidden ring-1 ring-white/[0.05]">
           {clerk.loaded && (
             <Editor
@@ -148,9 +147,13 @@ function EditorPanel() {
               }}
             />
           )}
+
           {!clerk.loaded && <EditorPanelSkeleton />}
         </div>
       </div>
+      {isShareDialogOpen && (
+        <ShareSnippetDialog onClose={() => setIsShareDialogOpen(false)} />
+      )}
     </div>
   );
 }

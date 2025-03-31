@@ -3,10 +3,16 @@ import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../../../convex/_generated/api";
 import { Blocks, Code2, Sparkles } from "lucide-react";
 import Link from "next/link";
-import { SignedIn } from "@clerk/nextjs";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  SignOutButton,
+} from "@clerk/nextjs";
 import HeaderProfileBtn from "./HeaderProfileBtn";
 import ThemeSelector from "./ThemeSelector";
 import LanguageSelector from "./LanguageSelector";
+import RunButton from "./RunButton";
 
 async function Header() {
   const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
@@ -80,7 +86,22 @@ async function Header() {
             </Link>
           )}
 
-          <SignedIn>{/* <RunButton /> */}</SignedIn>
+          <SignedIn>
+            <RunButton />
+            <SignOutButton>
+              <button className="px-4 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 transition">
+                Sign Out
+              </button>
+            </SignOutButton>
+          </SignedIn>
+
+          <SignedOut>
+            <SignInButton>
+              <button className="px-4 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 transition">
+                Sign In
+              </button>
+            </SignInButton>
+          </SignedOut>
 
           <div className="pl-3 border-l border-gray-800">
             <HeaderProfileBtn />
