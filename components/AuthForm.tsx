@@ -8,18 +8,21 @@ import { Form } from "@/components/ui/form";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
+import FormField from "./FormField";
+import { useRouter } from "next/navigation";
 
 type FormType = "signin" | "signup";
 
-const authFormSchema = (type : FormType) => {
+const authFormSchema = (type: FormType) => {
   return z.object({
-    name: type === 'signup' ? z.string().min(3) : z.string().optional(),
+    name: type === "signup" ? z.string().min(3) : z.string().optional(),
     email: z.string().email(),
     password: z.string().min(6),
-  })
-}
+  });
+};
 
-const AuthForm = ({type}: {type: FormType}) => {
+const AuthForm = ({ type }: { type: FormType }) => {
+  const router = useRouter();
   const formSchema = authFormSchema(type);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -33,10 +36,12 @@ const AuthForm = ({type}: {type: FormType}) => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      if(type === 'signup') {
-        console.log('Signing up', values);
+      if (type === "signup") {
+        toast.success("Account created successfully!");
+        router.push("/signin");
       } else {
-        console.log('Signing in', values);
+        toast.success("Logged in successfully!");
+        router.push("/");
       }
     } catch (error) {
       console.log(error);
@@ -44,7 +49,7 @@ const AuthForm = ({type}: {type: FormType}) => {
     }
   }
 
-  const isSignIn = type === 'signin';
+  const isSignIn = type === "signin";
 
   return (
     <div className="card-border lg:min-w-[566px]">
@@ -61,18 +66,43 @@ const AuthForm = ({type}: {type: FormType}) => {
             onSubmit={form.handleSubmit(onSubmit)}
             className="w-full space-y-6 mt-4 form"
           >
-            {!isSignIn && <p>Name</p>}
-            <p>Email</p>
-            <p>Password</p>
+            {!isSignIn && (
+              <FormField
+                control={form.control}
+                name="name"
+                label="Name"
+                placeholder="Your name"
+                type="text"
+              />
+            )}
+            <FormField
+                control={form.control}
+                name="email"
+                label="Email"
+                placeholder="your@mail.com"
+                type="email"
+              />
+            <FormField
+                control={form.control}
+                name="password"
+                label="Password"
+                placeholder="your password"
+                type="password"
+              />
 
-            <Button className="btn" type="submit">{isSignIn ? 'Sign In' : 'Create Account'}</Button>
+            <Button className="btn" type="submit">
+              {isSignIn ? "Sign In" : "Create Account"}
+            </Button>
           </form>
         </Form>
 
         <p className="text-center">
-          {isSignIn ? 'Don\'t have an account?' : 'Already have an account?'}{" "}
-          <Link href={!isSignIn ? '/signin' : '/signup'} className="font-bold text-user-primary ml-1">
-            {!isSignIn ? 'Sign In' : 'Sign Up'}
+          {isSignIn ? "Don't have an account?" : "Already have an account?"}{" "}
+          <Link
+            href={!isSignIn ? "/signin" : "/signup"}
+            className="font-bold text-user-primary ml-1"
+          >
+            {!isSignIn ? "Sign In" : "Sign Up"}
           </Link>
         </p>
       </div>
