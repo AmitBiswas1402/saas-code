@@ -7,7 +7,6 @@ import DisplayTechIcons from "./DisplayTechIcons";
 
 const InterviewCard = ({
   id,
-  userId,
   role,
   type,
   techstack,
@@ -40,10 +39,10 @@ const InterviewCard = ({
                 <p>{formattedDate}</p>
               </div>
 
-              <div className="flex flex-row gap-2">
+              {/* <div className="flex flex-row gap-2">
                 <Image src="/star.svg" alt="star" width={22} height={22} />
                 <p>{feedback?.totalScore || '---'}/100</p>
-              </div>
+              </div> */}
             </div>
 
             <p className="line-clamp-2 mt-5">
