@@ -8,10 +8,15 @@ const ONE_WEEK = 60 * 60 * 24 * 7 * 1000;
 export async function signUp(params: SignUpParams) {
   const { uid, name, email } = params;
 
+  console.log("SignUp Params:", { uid, name, email });
+
   try {
     const userRecord = await db.collection("users").doc(uid).get();
 
+    console.log("User record exists:", userRecord.exists);
+
     if (userRecord.exists) {
+      console.warn("User already exists with UID:", uid);
       return { success: false, error: "User already exists" };
     }
 
@@ -19,6 +24,8 @@ export async function signUp(params: SignUpParams) {
       name,
       email,
     });
+
+    console.log("User successfully created:", { uid, name, email });
 
     return {
       success: true,
@@ -28,7 +35,7 @@ export async function signUp(params: SignUpParams) {
     console.error("Error creating user:", error);
 
     if (error.code === "auth/email-already-in-use") {
-      return { sucess: false, error: "Email already in use" };
+      return { success: false, error: "Email already in use" };
     }
 
     return {
@@ -106,4 +113,3 @@ export async function isAuthticated() {
 
   return !!user;
 }
-
